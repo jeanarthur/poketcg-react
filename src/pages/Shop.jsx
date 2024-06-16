@@ -6,29 +6,62 @@ import YGOApi from '../YGOApi';
 
 function Shop(){
 
-    const [card, setCard] = useState();
-
-    useEffect(() => {
-        if (card) {
-            YGODB.postCardInCollection(card);
-        }
-    }, [card])
+    const [cards, setCards] = useState([]);
+    const [rndCard, setRndCard] = useState();
+    const [hasAllCollected, setHasAllCollected] = useState(true);
 
     function getCard(){
-        YGOApi.getRandomCard(setCard);
+        YGOApi.getRandomCard(setRndCard);
     }
+
+    function getPack(){
+        setHasAllCollected(false);
+        setCards([]);
+        for (let i = 0; i < 4; i++) {
+            getCard();
+        }
+    }
+
+    function addToCollection(card) {
+        if (!card.collected) {
+            YGODB.postCardInCollection(card);
+            card.collected = true;
+        }
+
+        if (cards.filter((c)=>c.collected).length === cards.length){
+            setHasAllCollected(true);
+        }
+    }
+
+    useEffect(() => {
+        if (rndCard){
+            setCards(cards.concat(rndCard));
+        }
+    }, [rndCard]);
 
     return(
         <>
             <h1>Shop</h1>
             <Link to={'/'}>Página inicial</Link>
             <br />
-            <button onClick={getCard}>Get Card</button>
             {
-                card && 
-                <>
-                    <img style={{width: 200+'px', height: 'auto'}} key={card?.id} src={card?.image} alt={card?.name}/>
-                </>
+               hasAllCollected && <button onClick={getPack}>Get Pack</button>
+            }
+            {
+                cards?.length > 0 && cards.map((card, i) =>
+                    <>
+                        <img 
+                            style={{width: 200+'px', height: 'auto'}} 
+                            key={card?.id} 
+                            src={"/cards/backcard.png"}
+                            alt={card?.name}
+                            onClick={((event)=>{
+                                event.target.src = card?.image;
+                                addToCollection(card);
+                            })}
+                        />
+                    </>
+                )
             }
         </>
     )
