@@ -35,6 +35,7 @@ const YGOApi = {
                 data = {
                     id: data.id.toString(),
                     name: data.name,
+                    type: data.type,
                     image: `/cards/${data.id}.jpg`
                 }
                 setStateCallback(data);
