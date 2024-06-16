@@ -24,9 +24,19 @@ const YGODB = {
     },
 
     postCardInCollection: (card) => {
-        axios.post("http://localhost:3000/cardCollection", card)
-            .then((res) => {
-                console.log(res);
+        hasCardInCollection(card.id)
+            .then((has) => {
+                if (has){
+                    YGODB.patchCardInColection(has.id, has.amount + 1);
+                } else {
+                    axios.post("http://localhost:3000/cardCollection", {...card, amount: 1})
+                        .then((res) => {
+                            console.log(res);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        })
+                }
             })
             .catch((error) => {
                 console.error(error);
@@ -34,13 +44,22 @@ const YGODB = {
     },
 
     patchCardInColection: (id, amount) => {
-        axios.patch(`http://localhost:3000/cardCollection/${id}`, {amount})
+        axios.patch(`http://localhost:3000/cardCollection/${id}`, { amount: amount })
             .then((res) => {
                 console.log(res);
             })
             .catch((error) => {
                 console.error(error);
             })
+    }
+}
+
+async function hasCardInCollection(id){
+    try {
+        return await axios.get(`http://localhost:3000/cardCollection/${id}`)
+            .then((res) => {return res.data});
+    } catch {
+        return false;
     }
 }
 

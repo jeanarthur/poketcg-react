@@ -16,7 +16,12 @@ const YGOApi = {
     getCardById: (setStateCallback, id) => {
         axios.get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${id}`)
             .then((res) => {
-                setStateCallback(res?.data?.data[0]);
+                let data = res?.data?.data[0];
+                data = {
+                    ...data,
+                    id: data.id.toString()
+                }
+                setStateCallback(data);
             })
             .catch((error) => {
                 console.error(error);
@@ -28,7 +33,7 @@ const YGOApi = {
             .then((res) => {
                 let data = res?.data;
                 data = {
-                    id: data.id,
+                    id: data.id.toString(),
                     name: data.name,
                     image: `/cards/${data.id}.jpg`
                 }

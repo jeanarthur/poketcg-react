@@ -18,10 +18,6 @@ function Shop(){
         YGOApi.getRandomCard(setCard);
     }
 
-    function closePack(){
-        setCard();
-    }
-
     return(
         <>
             <h1>Shop</h1>
