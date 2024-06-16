@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import YGOApi from "../YGOApi";
+
+import YGODB from "../YGODB";
 
 function MyCollection(){
 
@@ -8,7 +9,7 @@ function MyCollection(){
     const [page, setPage] = useState(0);
 
     if (!cards){
-        YGOApi.getAllCards(setCards);
+        YGODB.getCardCollection(setCards);
     }
 
     return(
@@ -20,6 +21,9 @@ function MyCollection(){
                 cards && cards.slice(page, page + 18).map((card) => 
                     <img style={{width: 200+'px', height: 'auto'}} key={card?.id} src={(`/cards/${card?.id}.jpg`)} alt={card?.name}/>
                 )
+            }
+            {
+                cards?.length == 0 && <h2>Empty collection</h2>
             }
             <br />
             <button onClick={()=>{setPage(page >= 18 ? page - 18 : 0)}}>Anterior</button>

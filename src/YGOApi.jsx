@@ -21,6 +21,22 @@ const YGOApi = {
             .catch((error) => {
                 console.error(error);
             })
+    },
+
+    getRandomCard: (setStateCallback) => {
+        axios.get("https://db.ygoprodeck.com/api/v7/randomcard.php")
+            .then((res) => {
+                let data = res?.data;
+                data = {
+                    id: data.id,
+                    name: data.name,
+                    image: `/cards/${data.id}.jpg`
+                }
+                setStateCallback(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
     }
 
 }
