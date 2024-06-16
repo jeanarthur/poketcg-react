@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
 
-function CardFilter({cards, outCallback}) {
+function Filter({elements, attribute, outCallback}) {
 
     function filter(event){
         let target = event.target;
-        let filteredCards = cards?.filter((card) => card?.type === target.value);
-        outCallback(filteredCards);
+        let filteredElements = elements?.filter((element) => element[attribute] === target.value);
+        outCallback(filteredElements);
     }
 
     return(
@@ -14,9 +14,9 @@ function CardFilter({cards, outCallback}) {
             <select onChange={filter}>
                 <option key="all" value="all">All</option>
                 {
-                    getDistinctValues(cards?.map((card) => card?.type))
-                        .map((type) => 
-                            <option key={type} value={type}>{type}</option>
+                    getDistinctValues(elements?.map((element) => element[attribute]))
+                        .map((attr) => 
+                            <option key={attr} value={attr}>{attr}</option>
                         )
                 }
             </select>
@@ -28,9 +28,9 @@ function getDistinctValues(values){
     return Array.from(new Set(values));
 }
 
-CardFilter.propTypes = {
-    cards: PropTypes.array,
+Filter.propTypes = {
+    elements: PropTypes.array,
     outCallback: PropTypes.func
 }
 
-export default CardFilter;
+export default Filter;

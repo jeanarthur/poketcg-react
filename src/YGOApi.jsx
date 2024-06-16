@@ -19,7 +19,8 @@ const YGOApi = {
                 let data = res?.data?.data[0];
                 data = {
                     ...data,
-                    id: data.id.toString()
+                    id: data.id.toString(),
+                    image: `/cards/${data.id}.jpg`
                 }
                 setStateCallback(data);
             })
